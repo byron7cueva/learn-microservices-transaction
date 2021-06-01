@@ -1,6 +1,11 @@
 .gradle
 /build/
 
+### Gradle Wrapper
+gradle/
+gradlew
+gradlew.bat
+
 # Ignore Gradle GUI config
 gradle-app.setting
 
@@ -15,3 +20,6 @@ gradle-app.setting
 
 # Ignore Gradle build output directory
 build
+
+### IDEA ###
+.idea
