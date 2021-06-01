@@ -22,8 +22,11 @@ repositories {
 
 dependencies {
     // These dependencies are used by the application.
+    // Ofrece un conjunto de bibliotecas centrales y ampliadas que utiliza Gradle
     implementation 'com.google.guava:guava:29.0-jre'
+    // Habilita la comunicación con el servidor temporal
     implementation 'io.temporal:temporal-sdk:1.0.0'
+    // Se asegurará de que haya un logger al que vincularse dentro del SDK y evitará un mensaje de advertencia del logger predeterminado
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
     // Use JUnit test framework

@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    // Add support for building a CLI application
+    id 'application'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Dependencias de la aplicación
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'io.temporal:temporal-sdk:1.0.0'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    // JUnit
+    testImplementation("junit:junit:4.13")
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.2")
+}
+
+task sayHello(type: JavaExec) {
+    main = 'helloworldapp.InitiateHelloWorld'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task startWorker(type: JavaExec) {
+    main = 'helloworldapp.HelloWorldWorker'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+test {
+    useJUnitPlatform()
+}
