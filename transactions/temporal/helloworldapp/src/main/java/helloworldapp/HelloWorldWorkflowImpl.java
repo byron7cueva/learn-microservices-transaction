@@ -5,7 +5,8 @@ import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
 
 /**
- * Implementacion del flujo de trabajo
+ * Implementacion del flujo de trabajo Cada vez que se inicia una nueva ejecución de flujo de
+ * trabajo, se crea una nueva instancia del objeto de la implememtación.
  */
 public class HelloWorldWorkflowImpl implements HelloWorldWorkflow {
 
@@ -18,7 +19,9 @@ public class HelloWorldWorkflowImpl implements HelloWorldWorkflow {
     private final Format format = Workflow.newActivityStub(Format.class, options);
 
     /**
-     * Punto de entrada al flujo de trabajo
+     * Punto de entrada al flujo de trabajo Tan pronto como este método regrese, la ejecución del
+     * flujo de trabajo se considera completa.
+     *
      * @param name
      * @return
      */

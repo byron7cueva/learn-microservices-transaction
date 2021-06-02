@@ -3,12 +3,9 @@ package helloworldapp;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 
-/**
- * Interfaz del Flujo de trabajo
- */
 @WorkflowInterface
-public interface HelloWorldWorkflow {
+public interface MediaProcessingWorkflow extends Retryable {
 
     @WorkflowMethod
-    String getGreeting(String name);
+    String processBlob(String args);
 }

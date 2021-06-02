@@ -5,8 +5,28 @@
 * Se puede depurar un problema de ejecución de una actividad, mientras se ejecuta el flujo de trabajo. Se puede encontrar la solución a un problema  y para actualizar el código de flujo de trabajo que esta medio completado, solo se debe reiniciar el trabajador. En el próximo intento programado, el trabajador continuará justo donde el flujo de trabajo estaba fallando y ejecutara con éxito la actividad recién compilada, completando el flujo de trabajo.
 * El inicio del flujo de trabajo y el trabajador que lo ejecuta, utilizan la misma lista de tareas en cola.
 * Para ejecutar la aplicación debemos iniciar el flujo de trabajo y el trabajador. Se puede iniciar en cualquier orden.
+* Aunque Temporal tiene la capacidad de reproducción, se debe concentrar en implementar la lógica comercial y escribir sus flujos de trabajo con el fin de que se ejecuten una sola vez.
 
 ## SDK
+
+### Flujo de trabajo
+
+* Son programas resistentes, lo que significa que continuarán ejecutándose incluso en presencia de diferentes condiciones de falla.
+* Encapsulan la ejecución / orquestación de tareas que incluyen actividades y flujos de trabajo secundarios.
+* También necesitan reaccionar a eventos externos, responder a solicitudes de consulta y lidiar con los tiempos de espera.
+* Además de las actividades, un flujo de trabajo también puede orquestar otros flujos de trabajo. A través de Workflow.newChildWorkflowStub.
+* Limitaciones en el JAVA:
+  * No se debe usar ninguna construcción que dependa de la hora del sistema.
+  * No utilizar ninguna variable global mutable en las implementaciones de flujo de trabajo. Esto asegura que múltiples instancias de flujo de trabajo estén completamente aisladas.
+  * No llamar a ninguna función no determinista como una función random o aleatoria, directamente desde el código de flujo de trabajo. El SDK proporciona una API para llamar a código no determinista.
+  * Realizar todas las operaciones de IO y llamadas de servicios de terceros en actividades y no en flujos de trabajo, ya que generalmente son de naturaleza no determinista.
+  * No utilizar ninguna clase de subprocesos múltiples como Thread o ThreadPoolExecutor. Utilizar a su vez Async.function o Aync.procedure, proporcionado por el SDK, para ejecutar código de forma asíncrona.
+  * No utilizar ninguna sincronización, bloqueos ni otras clases estándar relacionadas con la cimultaneidad de bloque de Java, además de las proporcionadas por la clase Workflow. No hay necesidad de una sincronización explícita porque el cñodigo de subprocesos múltiples dentro de un flujo de trabajo se ejecuta un subproceso a la vez y bajo un bloqueo global.
+    * Llame a WorkflowThread.sleep en lugar de Thread.sleep
+    * Utilice Promise y CompletablePromise en lugar de Future y CompletableFuture.
+    * Utilice WorkflowQueue en lugar de BlockingQueue.
+  * Use Worflow.getVersion al realizar cambios en el código del flujo de trabajo. Sin esto cualquier implementación de código de flujo de trabajo actualizado podría romper los flujos de trabajo que ya se están ejecutando.
+  * No acceda a la API de configuraciones directamente desde un flujo de trabajo porque los cambios en la configuración pueden afectar la ruta de ejecución del flujo de trabajo. Páselo como argumento a una función de flujo de trabajo o use una actividad para cargarlo.
 
 ### Función de Flujo de trabajo.
 
@@ -24,6 +44,8 @@
 * Está diseñadas para manejar código no determinista que podría resultar en resultados inesperados o errores.
 * Un objeto de actividad se define como cualquier otro objeto en Java.
 * Necesita una interfaz y una implementación. La interfaz incluye decoradores temporales.
+* Cuando se reproduce la ejecución de un flujo de trabajo, las actividades ejecutadas con éxito no se vuelven a ejecutar porque sus resultados ya están registrados en el historial de eventos del flujo de trabajo.
+* La cantidad de datos que se transfiere a través de los parámetros de invocación de actividad o los valores de retorno, podría generar un gran historial de ejecución y eso afectaría negativamente al rendimiento de su flujo de trabajo.
 
 ### Trabajador
 
